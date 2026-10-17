@@ -1,0 +1,29 @@
+[
+  {
+    "order_id": "100245",
+    "order_status": "processing",
+    "payment_status": "paid",
+    "fulfillment_status": "not_received",
+    "sync_status": "failed",
+    "sync_logs": "Přenos do skladu selhal: WMS_TIMEOUT (mock).",
+    "sync_retry_count": 0
+  },
+  {
+    "order_id": "100246",
+    "order_status": "new",
+    "payment_status": "pending",
+    "fulfillment_status": "on_hold",
+    "sync_status": "not_started",
+    "sync_logs": "Synchronizace nebyla spuštěna: objednávka čeká na zaplacení.",
+    "sync_retry_count": 0
+  },
+  {
+    "order_id": "100247",
+    "order_status": "processing",
+    "payment_status": "paid",
+    "fulfillment_status": "not_received",
+    "sync_status": "failed",
+    "sync_logs": "10:15 – Zahájen přenos objednávky do skladu. 10:16 – Přenos selhal: WMS_UNAVAILABLE, skladový systém je nedostupný.",
+    "sync_retry_count": 0
+  }
+]

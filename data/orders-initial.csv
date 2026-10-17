@@ -1,0 +1,4 @@
+﻿order_id,order_status,payment_status,fulfillment_status,sync_status,sync_logs,sync_retry_count
+100245,processing,paid,not_received,failed,Přenos do skladu selhal: WMS_TIMEOUT (mock).,0
+100246,new,pending,on_hold,not_started,Synchronizace nebyla spuštěna: objednávka čeká na zaplacení.,0
+100247,processing,paid,not_received,failed,"10:15 – Zahájen přenos objednávky do skladu. 10:16 – Přenos selhal: WMS_UNAVAILABLE, skladový systém je nedostupný.",0

@@ -1,0 +1,8 @@
+﻿id,request_id,status,description,createdAt,updatedAt
+1,20,open,"Číslo objednávky: 100247
+Popis problému: Testovací incident pro předání případu operátorovi v mock systému.
+Ověřená zjištění: Uživatel výslovně požádal o vytvoření incidentu; nejsou k dispozici žádná další ověřená data o stavu objednávky, platby, expedice ani synchronizace.
+Chybějící informace: Stav objednávky, platby, expedice a synchronizace nebyl pro tento požadavek ověřován.
+Požadovaný další postup: Předat případ operátorovi k ručnímu odbavení.",2026-10-16T07:25:41.837Z,2026-10-16T07:25:41.837Z
+3,127,open,"Objednávka 100247 nebyla expedována. Ověřeno: objednávka existuje a je ve stavu processing, platba je paid, fulfillment_status je not_received. Synchronizační logy nebylo možné ověřit, protože služba synchronizačních logů je nedostupná (TOOL_UNAVAILABLE). Nelze potvrdit stav synchronizace ani přesnou příčinu neexpedování. Doporučený postup: prověřit dostupnost synchronizační služby a následně stav synchronizace objednávky 100247.",2026-10-16T09:27:16.440Z,2026-10-16T09:27:16.440Z
+4,151,open,"Objednávka 100247. Ověřeno: order_status = processing, payment_status = paid, fulfillment_status = not_received. Synchronizační logy nebylo možné načíst, služba vrátila TOOL_UNAVAILABLE (simulovaná služba synchronizačních logů je nedostupná), takže stav synchronizace ani příčinu nepředání skladu nelze ověřit. Požadavek: zjistit důvod neexpedování a při nedostupné službě vytvořit incident. Doporučený další postup: prověřit dostupnost služby synchronizačních logů a následně dohledat stav synchronizace objednávky 100247.",2026-10-16T10:40:33.257Z,2026-10-16T10:40:33.257Z

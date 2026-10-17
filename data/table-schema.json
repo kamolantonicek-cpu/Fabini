@@ -1,0 +1,60 @@
+{
+  "tables": [
+    {
+      "name": "Fabini - orders",
+      "columns": [
+        {
+          "name": "order_id",
+          "type": "string"
+        },
+        {
+          "name": "order_status",
+          "type": "string"
+        },
+        {
+          "name": "payment_status",
+          "type": "string"
+        },
+        {
+          "name": "fulfillment_status",
+          "type": "string"
+        },
+        {
+          "name": "sync_status",
+          "type": "string"
+        },
+        {
+          "name": "sync_logs",
+          "type": "string"
+        },
+        {
+          "name": "sync_retry_count",
+          "type": "number"
+        }
+      ]
+    },
+    {
+      "name": "Fabini - incidents",
+      "columns": [
+        {
+          "name": "request_id",
+          "type": "string"
+        },
+        {
+          "name": "status",
+          "type": "string"
+        },
+        {
+          "name": "description",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "automatic_columns": [
+    "id",
+    "createdAt",
+    "updatedAt"
+  ],
+  "note": "Definice vlastních sloupců. Automatické sloupce vytváří n8n. Toto není export databáze n8n."
+}
