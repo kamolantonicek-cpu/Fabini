@@ -1,0 +1,403 @@
+{
+  "name": "Fabini - get_sync_logs",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "order_id"
+            }
+          ]
+        }
+      },
+      "id": "1a348f0c-a91a-404d-b4df-8e91e232b50a",
+      "typeVersion": 1.1,
+      "name": "Sync input",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        272,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\nif (items.some(item =>\n  String(item.json.order_id ?? '').trim() === '100247'\n)) {\n  throw new Error(\n    'MOCK_SYNC_API_UNAVAILABLE: Simulovaný výpadek služby synchronizačních logů.'\n  );\n}\n\nreturn items;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        720,
+        464
+      ],
+      "id": "c38fa200-b3aa-42fd-84ca-9529c9d981af",
+      "name": "Simulate sync API",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "CKrWhg3EtrqP7f76",
+          "mode": "list",
+          "cachedResultName": "Fabini - orders",
+          "cachedResultUrl": "/projects/OKHXelvbOul66yqr/datatables/CKrWhg3EtrqP7f76"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "order_id",
+              "keyValue": "={{ String($json.order_id ?? '').trim() }}"
+            }
+          ]
+        },
+        "limit": 1
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        944,
+        368
+      ],
+      "id": "8d20fa52-6729-40e0-a6da-e80a6b1957f2",
+      "name": "Find order",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0814d59a-9819-4ebe-8459-93dbd7795a93",
+              "name": "order_id",
+              "value": "={{ $json.order_id }}",
+              "type": "string"
+            },
+            {
+              "id": "3d098aea-ca9c-40d2-81d5-f11379686d97",
+              "name": "sync_status",
+              "value": "={{ $json.sync_status }}",
+              "type": "string"
+            },
+            {
+              "id": "ef1f2484-320c-4506-b353-7c1d7c4e6247",
+              "name": "sync_logs",
+              "value": "={{ $json.sync_logs }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        1392,
+        272
+      ],
+      "id": "886cd946-689f-4974-8fe1-9a6f265977c0",
+      "name": "Return sync logs"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0814d59a-9819-4ebe-8459-93dbd7795a93",
+              "name": "ok",
+              "value": false,
+              "type": "boolean"
+            },
+            {
+              "id": "3d098aea-ca9c-40d2-81d5-f11379686d97",
+              "name": "status",
+              "value": "error",
+              "type": "string"
+            },
+            {
+              "id": "ef1f2484-320c-4506-b353-7c1d7c4e6247",
+              "name": "error_code",
+              "value": "TOOL_UNAVAILABLE",
+              "type": "string"
+            },
+            {
+              "id": "ddb6a070-6689-4746-a13e-4c1481ddd06b",
+              "name": "order_id",
+              "value": "={{ $('Sync input').first().json.order_id }}",
+              "type": "string"
+            },
+            {
+              "id": "da0e8e0a-0982-4782-95d7-55af57cee843",
+              "name": "reason",
+              "value": "Simulovaná služba synchronizačních logů je nedostupná. Stav synchronizace nebylo možné ověřit.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        944,
+        560
+      ],
+      "id": "62164f7b-4b53-47d7-a864-d2d7df29abd3",
+      "name": "Return sync error"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "6dc84978-f5c5-452b-8667-aa976a2dbaa4",
+              "leftValue": "={{ String($json.order_id ?? '').trim() }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        496,
+        560
+      ],
+      "id": "d528db93-2b7e-4e61-8e7f-802c81e3f7d7",
+      "name": "Order ID is valid?"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "a358adfe-d2c4-4058-af69-9d24a6f3b1bf",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "number",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1168,
+        368
+      ],
+      "id": "5b53d65b-a63a-43b8-bf6d-371a88ddb6ef",
+      "name": "Order exists"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0814d59a-9819-4ebe-8459-93dbd7795a93",
+              "name": "ok",
+              "value": false,
+              "type": "boolean"
+            },
+            {
+              "id": "3d098aea-ca9c-40d2-81d5-f11379686d97",
+              "name": "status",
+              "value": "error",
+              "type": "string"
+            },
+            {
+              "id": "2b3137d9-6096-46a7-be21-697e612d7323",
+              "name": "order_id",
+              "value": "={{ String($('Sync input').first().json.order_id ?? '').trim() }}",
+              "type": "string"
+            },
+            {
+              "id": "30175819-3dba-4202-ae55-ab1932d8051f",
+              "name": "error_code",
+              "value": "VALIDATION_ERROR",
+              "type": "string"
+            },
+            {
+              "id": "6e6efba9-14de-45c4-85b7-a303310b374f",
+              "name": "reason",
+              "value": "Chybí číslo objednávky v poli order_id.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        720,
+        656
+      ],
+      "id": "bd1ec659-f420-4f4f-ae4b-7c290ecb2ac8",
+      "name": "Return validation error"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0814d59a-9819-4ebe-8459-93dbd7795a93",
+              "name": "ok",
+              "value": false,
+              "type": "boolean"
+            },
+            {
+              "id": "3d098aea-ca9c-40d2-81d5-f11379686d97",
+              "name": "status",
+              "value": "error",
+              "type": "string"
+            },
+            {
+              "id": "2b3137d9-6096-46a7-be21-697e612d7323",
+              "name": "order_id",
+              "value": "={{ String($('Sync input').first().json.order_id ?? '').trim() }}",
+              "type": "string"
+            },
+            {
+              "id": "30175819-3dba-4202-ae55-ab1932d8051f",
+              "name": "error_code",
+              "value": "ORDER_NOT_FOUND",
+              "type": "string"
+            },
+            {
+              "id": "6e6efba9-14de-45c4-85b7-a303310b374f",
+              "name": "reason",
+              "value": "Objednávka nebyla v mock systému nalezena.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        1392,
+        464
+      ],
+      "id": "2ff88c98-1c31-41a7-9c83-aca655b82651",
+      "name": "Return order not found"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Sync input": {
+      "main": [
+        [
+          {
+            "node": "Order ID is valid?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simulate sync API": {
+      "main": [
+        [
+          {
+            "node": "Find order",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Return sync error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find order": {
+      "main": [
+        [
+          {
+            "node": "Order exists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Order ID is valid?": {
+      "main": [
+        [
+          {
+            "node": "Simulate sync API",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Return validation error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Order exists": {
+      "main": [
+        [
+          {
+            "node": "Return sync logs",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Return order not found",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "a6589697-e680-41b3-be0c-34caee485f8d",
+  "meta": {
+    "instanceId": "d0fa15ad0db775b51f5e7234c74a1f6e3918674d2c7cf0d2a1e72f807ed278a5"
+  },
+  "nodeGroups": [],
+  "id": "LMNQrt1Rf8JwfNNO",
+  "tags": []
+}

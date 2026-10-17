@@ -1,0 +1,589 @@
+{
+  "name": "Fabini - retry_sync",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "order_id"
+            }
+          ]
+        }
+      },
+      "id": "5d36203a-da53-4c4a-8b40-224bf26f1a28",
+      "typeVersion": 1.1,
+      "name": "Retry input",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        272,
+        528
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "CKrWhg3EtrqP7f76",
+          "mode": "list",
+          "cachedResultName": "Fabini - orders",
+          "cachedResultUrl": "/projects/OKHXelvbOul66yqr/datatables/CKrWhg3EtrqP7f76"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "order_id",
+              "keyValue": "={{ String($json.order_id ?? '').trim() }}"
+            }
+          ]
+        },
+        "limit": 1
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        720,
+        432
+      ],
+      "id": "b359fe8e-df3a-47d5-947d-472df2d0c1f8",
+      "name": "Find order",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "b6d38175-5934-4fce-bde7-ed7725099780",
+              "leftValue": "={{ $json.payment_status }}",
+              "rightValue": "paid",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "0df7ed04-263d-4e04-8de0-58e49c09201d",
+              "leftValue": "={{ $json.fulfillment_status }}",
+              "rightValue": "not_received",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "2d49d155-db20-428b-bf75-bed3254f7b60",
+              "leftValue": "={{ $json.sync_status }}",
+              "rightValue": "failed",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "f1a16cd6-e296-48b8-ac43-ea43e63171da",
+              "leftValue": "={{ $json.sync_retry_count }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1168,
+        336
+      ],
+      "id": "165f1627-b862-4ef1-8319-55f9d496ed53",
+      "name": "Retry allowed"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0814d59a-9819-4ebe-8459-93dbd7795a93",
+              "name": "order_id",
+              "value": "={{ $json.order_id }}",
+              "type": "string"
+            },
+            {
+              "id": "3d098aea-ca9c-40d2-81d5-f11379686d97",
+              "name": "ok",
+              "value": false,
+              "type": "boolean"
+            },
+            {
+              "id": "ef1f2484-320c-4506-b353-7c1d7c4e6247",
+              "name": "status",
+              "value": "blocked",
+              "type": "string"
+            },
+            {
+              "id": "7bb9e6c1-f88b-4e9e-8594-e4fee03a9697",
+              "name": "reason",
+              "value": "Opakování nebylo provedeno: objednávka nesplňuje podmínky nebo byl vyčerpán limit jednoho opakování.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        1392,
+        432
+      ],
+      "id": "4d66f592-a22d-4080-89c3-de51b11de83b",
+      "name": "Return retry blocked"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "6dc84978-f5c5-452b-8667-aa976a2dbaa4",
+              "leftValue": "={{ String($json.order_id ?? '').trim() }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        496,
+        528
+      ],
+      "id": "5efa36f7-b38a-4b73-93d2-82ed58a22e46",
+      "name": "Order ID is valid?"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "a358adfe-d2c4-4058-af69-9d24a6f3b1bf",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "number",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        944,
+        432
+      ],
+      "id": "72f81bdd-2895-4a4d-b18c-78f7d0020961",
+      "name": "Order exists"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0814d59a-9819-4ebe-8459-93dbd7795a93",
+              "name": "ok",
+              "value": false,
+              "type": "boolean"
+            },
+            {
+              "id": "3d098aea-ca9c-40d2-81d5-f11379686d97",
+              "name": "status",
+              "value": "error",
+              "type": "string"
+            },
+            {
+              "id": "2b3137d9-6096-46a7-be21-697e612d7323",
+              "name": "order_id",
+              "value": "={{ String($('Retry input').first().json.order_id ?? '').trim() }}",
+              "type": "string"
+            },
+            {
+              "id": "30175819-3dba-4202-ae55-ab1932d8051f",
+              "name": "error_code",
+              "value": "VALIDATION_ERROR",
+              "type": "string"
+            },
+            {
+              "id": "6e6efba9-14de-45c4-85b7-a303310b374f",
+              "name": "reason",
+              "value": "Chybí číslo objednávky v poli order_id.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        720,
+        624
+      ],
+      "id": "a33d0250-9a90-479b-b101-5e93ae42f8b9",
+      "name": "Return validation error"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0814d59a-9819-4ebe-8459-93dbd7795a93",
+              "name": "ok",
+              "value": false,
+              "type": "boolean"
+            },
+            {
+              "id": "3d098aea-ca9c-40d2-81d5-f11379686d97",
+              "name": "status",
+              "value": "error",
+              "type": "string"
+            },
+            {
+              "id": "2b3137d9-6096-46a7-be21-697e612d7323",
+              "name": "order_id",
+              "value": "={{ String($('Retry input').first().json.order_id ?? '').trim() }}",
+              "type": "string"
+            },
+            {
+              "id": "30175819-3dba-4202-ae55-ab1932d8051f",
+              "name": "error_code",
+              "value": "ORDER_NOT_FOUND",
+              "type": "string"
+            },
+            {
+              "id": "6e6efba9-14de-45c4-85b7-a303310b374f",
+              "name": "reason",
+              "value": "Objednávka nebyla v mock systému nalezena.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        1168,
+        528
+      ],
+      "id": "671c4763-cc85-4335-85f1-c3964bbed242",
+      "name": "Return order not found"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "value": "CKrWhg3EtrqP7f76",
+          "mode": "list",
+          "cachedResultName": "Fabini - orders",
+          "cachedResultUrl": "/projects/OKHXelvbOul66yqr/datatables/CKrWhg3EtrqP7f76"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "order_id",
+              "keyValue": "={{ $json.order_id }}"
+            },
+            {
+              "keyName": "sync_retry_count",
+              "keyValue": "0"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "sync_retry_count": 1,
+            "sync_logs": "={{ ($json.sync_logs || '') + '\\n' + $now.toISO() + ' – Opakovaná synchronizace úspěšná; objednávka přijata skladem (mock).' }}",
+            "fulfillment_status": "received",
+            "sync_status": "success"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "order_id",
+              "displayName": "order_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "order_status",
+              "displayName": "order_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "payment_status",
+              "displayName": "payment_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "fulfillment_status",
+              "displayName": "fulfillment_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "sync_status",
+              "displayName": "sync_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "sync_logs",
+              "displayName": "sync_logs",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "sync_retry_count",
+              "displayName": "sync_retry_count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1392,
+        240
+      ],
+      "id": "725cdf0d-c1fa-4085-8550-4718ac3ce96d",
+      "name": "Apply sync retry",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0814d59a-9819-4ebe-8459-93dbd7795a93",
+              "name": "ok",
+              "value": false,
+              "type": "boolean"
+            },
+            {
+              "id": "3d098aea-ca9c-40d2-81d5-f11379686d97",
+              "name": "status",
+              "value": "error",
+              "type": "string"
+            },
+            {
+              "id": "8b254b25-4036-493b-b8bd-59db5e0a3cb7",
+              "name": "error_code",
+              "value": "WRITE_RESULT_UNKNOWN",
+              "type": "string"
+            },
+            {
+              "id": "4ef89af9-c66b-412e-9114-5b213c4bd8c5",
+              "name": "write_result",
+              "value": "unknown",
+              "type": "string"
+            },
+            {
+              "id": "7f4099b2-c14b-4d86-b2cf-59abaa3ad292",
+              "name": "reason",
+              "value": "Výsledek zápisu nebyl potvrzen. Před dalším pokusem je nutné ověřit stav; změna mohla proběhnout.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        1616,
+        240
+      ],
+      "id": "1d90c70a-9433-4cd3-b8b6-2659f8d62103",
+      "name": "Return write error"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Retry input": {
+      "main": [
+        [
+          {
+            "node": "Order ID is valid?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find order": {
+      "main": [
+        [
+          {
+            "node": "Order exists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Retry allowed": {
+      "main": [
+        [
+          {
+            "node": "Apply sync retry",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Return retry blocked",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Order ID is valid?": {
+      "main": [
+        [
+          {
+            "node": "Find order",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Return validation error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Order exists": {
+      "main": [
+        [
+          {
+            "node": "Retry allowed",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Return order not found",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Apply sync retry": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Return write error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "7cb3e4ff-b66c-411f-a6ed-ca90be460b52",
+  "meta": {
+    "instanceId": "d0fa15ad0db775b51f5e7234c74a1f6e3918674d2c7cf0d2a1e72f807ed278a5"
+  },
+  "nodeGroups": [],
+  "id": "UGkriepkzlkV0ftg",
+  "tags": []
+}

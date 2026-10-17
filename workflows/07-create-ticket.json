@@ -1,0 +1,484 @@
+{
+  "name": "Fabini - create_ticket",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "request_id"
+            },
+            {
+              "name": "description"
+            }
+          ]
+        }
+      },
+      "id": "1ec840ba-4fdd-43c4-a293-1254e18f91a0",
+      "typeVersion": 1.1,
+      "name": "Ticket input",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        272,
+        416
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "xdHlhzH8zZGVpU5g",
+          "mode": "list",
+          "cachedResultName": "Fabini - incidents",
+          "cachedResultUrl": "/projects/OKHXelvbOul66yqr/datatables/xdHlhzH8zZGVpU5g"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "request_id",
+              "keyValue": "={{ $json.request_id }}"
+            }
+          ]
+        },
+        "limit": 1
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        720,
+        320
+      ],
+      "id": "0af56051-770a-4e9b-af85-96c64d0139fe",
+      "name": "Find ticket",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "446dc5cc-32de-42a7-82b4-82589cc412a2",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "number",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        944,
+        320
+      ],
+      "id": "d3f9d68c-f6db-43a3-8233-c11ce29c150d",
+      "name": "Ticket exists"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0814d59a-9819-4ebe-8459-93dbd7795a93",
+              "name": "ok",
+              "value": true,
+              "type": "boolean"
+            },
+            {
+              "id": "3d098aea-ca9c-40d2-81d5-f11379686d97",
+              "name": "created",
+              "value": false,
+              "type": "boolean"
+            },
+            {
+              "id": "ef1f2484-320c-4506-b353-7c1d7c4e6247",
+              "name": "ticket_id",
+              "value": "={{ 'INC-' + $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "9c871533-2223-4a15-9506-c052142c7de1",
+              "name": "ticket_status",
+              "value": "={{ $json.status }}",
+              "type": "string"
+            },
+            {
+              "id": "79e26928-be4d-4713-b30c-eb977f68e230",
+              "name": "description",
+              "value": "={{ $json.description }}",
+              "type": "string"
+            },
+            {
+              "id": "1e132f08-5a35-429f-ac9a-6086af210b2d",
+              "name": "request_id",
+              "value": "={{ $json.request_id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        1168,
+        224
+      ],
+      "id": "d78d0f48-2753-48a2-a591-35dcc261d9ac",
+      "name": "Ticket already exists"
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "xdHlhzH8zZGVpU5g",
+          "mode": "list",
+          "cachedResultName": "Fabini - incidents",
+          "cachedResultUrl": "/projects/OKHXelvbOul66yqr/datatables/xdHlhzH8zZGVpU5g"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "description": "={{ $('Ticket input').first().json.description }}",
+            "status": "open",
+            "request_id": "={{ $('Ticket input').first().json.request_id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "request_id",
+              "displayName": "request_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "description",
+              "displayName": "description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1168,
+        416
+      ],
+      "id": "3c7f9c48-2cb4-415c-8420-e94bbd25ff7e",
+      "name": "Insert ticket",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0814d59a-9819-4ebe-8459-93dbd7795a93",
+              "name": "ok",
+              "value": true,
+              "type": "boolean"
+            },
+            {
+              "id": "3d098aea-ca9c-40d2-81d5-f11379686d97",
+              "name": "created",
+              "value": true,
+              "type": "boolean"
+            },
+            {
+              "id": "ef1f2484-320c-4506-b353-7c1d7c4e6247",
+              "name": "ticket_id",
+              "value": "={{ 'INC-' + $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "9c871533-2223-4a15-9506-c052142c7de1",
+              "name": "ticket_status",
+              "value": "={{ $json.status }}",
+              "type": "string"
+            },
+            {
+              "id": "79e26928-be4d-4713-b30c-eb977f68e230",
+              "name": "description",
+              "value": "={{ $json.description }}",
+              "type": "string"
+            },
+            {
+              "id": "1e132f08-5a35-429f-ac9a-6086af210b2d",
+              "name": "request_id",
+              "value": "={{ $json.request_id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        1392,
+        320
+      ],
+      "id": "abfc7b54-87bf-4207-9515-8cf0d131594d",
+      "name": "Ticket created"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "1bd353e6-56a3-4d15-8c1c-a9bcd76e4fdf",
+              "leftValue": "={{ String($json.description ?? '').trim() }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "0cd16e20-655c-49dd-a46b-91c7782f8302",
+              "leftValue": "={{ String($json.request_id ?? '').trim() }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        496,
+        416
+      ],
+      "id": "78f837f3-0e24-460e-b6a3-ed1dc28b20ca",
+      "name": "Is ticket input valid?"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "82095847-2398-4851-98f6-a5b504f72480",
+              "name": "ok",
+              "value": false,
+              "type": "boolean"
+            },
+            {
+              "id": "dd5e8265-8fce-416d-98b8-0fc8a9b76b5b",
+              "name": "status",
+              "value": "error",
+              "type": "string"
+            },
+            {
+              "id": "e41c740a-5456-4955-b4b7-da00a966e93d",
+              "name": "error_code",
+              "value": "={{ String($('Ticket input').first().json.description ?? '').trim() ? 'CONFIGURATION_ERROR' : 'VALIDATION_ERROR' }}",
+              "type": "string"
+            },
+            {
+              "id": "dd4fef28-736e-4d71-83e2-8bef4c617a10",
+              "name": "reason",
+              "value": "={{ String($('Ticket input').first().json.description ?? '').trim() ? 'Chybí interní identifikátor požadavku. Nastavení musí prověřit správce workflow.' : 'Chybí popis incidentu. Doplň, co se má řešit.' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        720,
+        512
+      ],
+      "id": "dd89e78a-5c61-4548-b0bb-012c11a80d3e",
+      "name": "Return ticket validation error"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0814d59a-9819-4ebe-8459-93dbd7795a93",
+              "name": "ok",
+              "value": false,
+              "type": "boolean"
+            },
+            {
+              "id": "3d098aea-ca9c-40d2-81d5-f11379686d97",
+              "name": "status",
+              "value": "error",
+              "type": "string"
+            },
+            {
+              "id": "8b254b25-4036-493b-b8bd-59db5e0a3cb7",
+              "name": "error_code",
+              "value": "WRITE_RESULT_UNKNOWN",
+              "type": "string"
+            },
+            {
+              "id": "4ef89af9-c66b-412e-9114-5b213c4bd8c5",
+              "name": "write_result",
+              "value": "unknown",
+              "type": "string"
+            },
+            {
+              "id": "7f4099b2-c14b-4d86-b2cf-59abaa3ad292",
+              "name": "reason",
+              "value": "Výsledek zápisu nebyl potvrzen. Před dalším pokusem je nutné ověřit stav; změna mohla proběhnout.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        1392,
+        512
+      ],
+      "id": "8127ba60-5a04-448e-a8cd-90efef6decdd",
+      "name": "Return write error"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Ticket input": {
+      "main": [
+        [
+          {
+            "node": "Is ticket input valid?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find ticket": {
+      "main": [
+        [
+          {
+            "node": "Ticket exists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ticket exists": {
+      "main": [
+        [
+          {
+            "node": "Ticket already exists",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Insert ticket",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert ticket": {
+      "main": [
+        [
+          {
+            "node": "Ticket created",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Return write error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is ticket input valid?": {
+      "main": [
+        [
+          {
+            "node": "Find ticket",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Return ticket validation error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "3c9913e2-f331-4bad-bb34-8a5c5c8435ab",
+  "meta": {
+    "instanceId": "d0fa15ad0db775b51f5e7234c74a1f6e3918674d2c7cf0d2a1e72f807ed278a5"
+  },
+  "nodeGroups": [],
+  "id": "smhY930baFnq2poL",
+  "tags": []
+}

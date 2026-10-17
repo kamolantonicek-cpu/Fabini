@@ -1,0 +1,318 @@
+{
+  "name": "Fabini - get_order",
+  "nodes": [
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "6dc84978-f5c5-452b-8667-aa976a2dbaa4",
+              "leftValue": "={{ String($json.order_id ?? '').trim() }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        496,
+        384
+      ],
+      "id": "ae59f829-f513-41e7-b122-973b975bbf11",
+      "name": "Order ID is valid?"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "CKrWhg3EtrqP7f76",
+          "mode": "list",
+          "cachedResultName": "Fabini - orders",
+          "cachedResultUrl": "/projects/OKHXelvbOul66yqr/datatables/CKrWhg3EtrqP7f76"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "order_id",
+              "keyValue": "={{ String($json.order_id ?? '').trim() }}"
+            }
+          ]
+        },
+        "limit": 1
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        720,
+        288
+      ],
+      "id": "c1df5adc-fd97-436b-bca3-5b52acceb11d",
+      "name": "Find order",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0814d59a-9819-4ebe-8459-93dbd7795a93",
+              "name": "order_id",
+              "value": "={{ $json.order_id }}",
+              "type": "string"
+            },
+            {
+              "id": "3d098aea-ca9c-40d2-81d5-f11379686d97",
+              "name": "order_status",
+              "value": "={{ $json.order_status }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        1168,
+        192
+      ],
+      "id": "cc80ad7b-ee58-48aa-9ab8-5c185c8ed9cf",
+      "name": "Return order"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "a358adfe-d2c4-4058-af69-9d24a6f3b1bf",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "number",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        944,
+        288
+      ],
+      "id": "1ebab328-611f-44bb-934a-377efa2b9d2e",
+      "name": "Order exists"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0814d59a-9819-4ebe-8459-93dbd7795a93",
+              "name": "ok",
+              "value": false,
+              "type": "boolean"
+            },
+            {
+              "id": "3d098aea-ca9c-40d2-81d5-f11379686d97",
+              "name": "status",
+              "value": "error",
+              "type": "string"
+            },
+            {
+              "id": "2b3137d9-6096-46a7-be21-697e612d7323",
+              "name": "order_id",
+              "value": "={{ String($('Order input').first().json.order_id ?? '').trim() }}",
+              "type": "string"
+            },
+            {
+              "id": "30175819-3dba-4202-ae55-ab1932d8051f",
+              "name": "error_code",
+              "value": "VALIDATION_ERROR",
+              "type": "string"
+            },
+            {
+              "id": "6e6efba9-14de-45c4-85b7-a303310b374f",
+              "name": "reason",
+              "value": "Chybí číslo objednávky v poli order_id.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        720,
+        480
+      ],
+      "id": "75bd96d6-c793-4724-8093-c414c9ce017d",
+      "name": "Return validation error"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0814d59a-9819-4ebe-8459-93dbd7795a93",
+              "name": "ok",
+              "value": false,
+              "type": "boolean"
+            },
+            {
+              "id": "3d098aea-ca9c-40d2-81d5-f11379686d97",
+              "name": "status",
+              "value": "error",
+              "type": "string"
+            },
+            {
+              "id": "2b3137d9-6096-46a7-be21-697e612d7323",
+              "name": "order_id",
+              "value": "={{ String($('Order input').first().json.order_id ?? '').trim() }}",
+              "type": "string"
+            },
+            {
+              "id": "30175819-3dba-4202-ae55-ab1932d8051f",
+              "name": "error_code",
+              "value": "ORDER_NOT_FOUND",
+              "type": "string"
+            },
+            {
+              "id": "6e6efba9-14de-45c4-85b7-a303310b374f",
+              "name": "reason",
+              "value": "Objednávka nebyla v mock systému nalezena.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        1168,
+        384
+      ],
+      "id": "ec7646a6-346c-421e-a3d1-637751e5efb1",
+      "name": "Return order not found"
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "order_id"
+            }
+          ]
+        }
+      },
+      "id": "c055762a-8fe7-4141-a639-df2372f30060",
+      "typeVersion": 1.1,
+      "name": "Order input",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        272,
+        384
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Order ID is valid?": {
+      "main": [
+        [
+          {
+            "node": "Find order",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Return validation error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find order": {
+      "main": [
+        [
+          {
+            "node": "Order exists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Order exists": {
+      "main": [
+        [
+          {
+            "node": "Return order",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Return order not found",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Order input": {
+      "main": [
+        [
+          {
+            "node": "Order ID is valid?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "61f8a39d-ffe5-49f6-8719-02159f8dea0d",
+  "meta": {
+    "instanceId": "d0fa15ad0db775b51f5e7234c74a1f6e3918674d2c7cf0d2a1e72f807ed278a5"
+  },
+  "nodeGroups": [],
+  "id": "BkYpmTLr3lUckoRB",
+  "tags": []
+}
