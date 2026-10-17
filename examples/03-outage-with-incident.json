@@ -1,0 +1,218 @@
+[
+    {
+      "output": "1. **Shrnutí výsledku**  \n   V simulaci v mock systému se nepodařilo ověřit přesnou příčinu neexpedování objednávky **100247**. Objednávka je zaplacená a ve stavu **processing**, ve skladu je vedena jako **not_received**. Synchronizační logy byly nedostupné, proto nelze potvrdit stav synchronizace jako příčinu.\n\n2. **Ověřená zjištění a nejistoty**  \n   - **Ověřeno:** `order_status = processing`  \n   - **Ověřeno:** `payment_status = paid`  \n   - **Ověřeno:** `fulfillment_status = not_received`  \n   - **Nejistota:** služba synchronizačních logů byla nedostupná (`TOOL_UNAVAILABLE`), takže **stav synchronizace ani důvod nepředání skladu nelze ověřit**.  \n   - Z nedostupnosti logů **nelze vyvozovat konkrétní příčinu** problému.\n\n3. **Skutečně provedené kroky**  \n   - Načtena objednávka `100247`  \n   - Ověřena platba objednávky  \n   - Ověřen stav fulfillmentu  \n   - Pokus o načtení synchronizačních logů vrátil `TOOL_UNAVAILABLE`  \n   - Na základě výslovného požadavku byl vytvořen incident\n\n4. **Výsledek akcí**  \n   - Diagnostika: **provedena**  \n   - Synchronizace: **neopakována**  \n   - Incident: **proveden** — vznikl ticket **INC-4**  \n   - Příčina neexpedování: **neověřena**\n\n5. **Doporučený další postup**  \n   Prověřit dostupnost služby synchronizačních logů a následně znovu dohledat stav synchronizace objednávky **100247**. Pokud bude potřeba, lze pak doplnit přesnější příčinu.",
+      "intermediateSteps": [
+        {
+          "action": {
+            "tool": "get_order",
+            "toolInput": {
+              "order_id": "100247"
+            },
+            "log": "Calling get_order",
+            "messageLog": [
+              {
+                "lc": 1,
+                "type": "constructor",
+                "id": [
+                  "langchain_core",
+                  "messages",
+                  "AIMessage"
+                ],
+                "kwargs": {
+                  "content": [],
+                  "tool_calls": [
+                    {
+                      "id": "call_7USkAdKLrs5eNqHsPERDDbfC",
+                      "name": "get_order",
+                      "args": {
+                        "order_id": "100247"
+                      },
+                      "type": "tool_call"
+                    }
+                  ],
+                  "invalid_tool_calls": [],
+                  "additional_kwargs": {},
+                  "response_metadata": {}
+                }
+              }
+            ],
+            "toolCallId": "call_7USkAdKLrs5eNqHsPERDDbfC",
+            "type": "tool_call"
+          },
+          "observation": "[{\"order_id\":\"100247\",\"order_status\":\"processing\"}]"
+        },
+        {
+          "action": {
+            "tool": "get_payment",
+            "toolInput": {
+              "order_id": "100247"
+            },
+            "log": "Calling get_payment",
+            "messageLog": [
+              {
+                "lc": 1,
+                "type": "constructor",
+                "id": [
+                  "langchain_core",
+                  "messages",
+                  "AIMessage"
+                ],
+                "kwargs": {
+                  "content": [],
+                  "tool_calls": [
+                    {
+                      "id": "call_BprgLW0oJtQs9tQZaLM89QAr",
+                      "name": "get_payment",
+                      "args": {
+                        "order_id": "100247"
+                      },
+                      "type": "tool_call"
+                    }
+                  ],
+                  "invalid_tool_calls": [],
+                  "additional_kwargs": {},
+                  "response_metadata": {}
+                }
+              }
+            ],
+            "toolCallId": "call_BprgLW0oJtQs9tQZaLM89QAr",
+            "type": "tool_call"
+          },
+          "observation": "[{\"order_id\":\"100247\",\"payment_status\":\"paid\"}]"
+        },
+        {
+          "action": {
+            "tool": "get_fulfillment",
+            "toolInput": {
+              "order_id": "100247"
+            },
+            "log": "Calling get_fulfillment",
+            "messageLog": [
+              {
+                "lc": 1,
+                "type": "constructor",
+                "id": [
+                  "langchain_core",
+                  "messages",
+                  "AIMessage"
+                ],
+                "kwargs": {
+                  "content": [],
+                  "tool_calls": [
+                    {
+                      "id": "call_dJVt64nEajupGtfzbmlKimSX",
+                      "name": "get_fulfillment",
+                      "args": {
+                        "order_id": "100247"
+                      },
+                      "type": "tool_call"
+                    }
+                  ],
+                  "invalid_tool_calls": [],
+                  "additional_kwargs": {},
+                  "response_metadata": {}
+                }
+              }
+            ],
+            "toolCallId": "call_dJVt64nEajupGtfzbmlKimSX",
+            "type": "tool_call"
+          },
+          "observation": "[{\"order_id\":\"100247\",\"fulfillment_status\":\"not_received\"}]"
+        },
+        {
+          "action": {
+            "tool": "get_sync_logs",
+            "toolInput": {
+              "order_id": "100247"
+            },
+            "log": "Calling get_sync_logs",
+            "messageLog": [
+              {
+                "lc": 1,
+                "type": "constructor",
+                "id": [
+                  "langchain_core",
+                  "messages",
+                  "AIMessage"
+                ],
+                "kwargs": {
+                  "content": [],
+                  "tool_calls": [
+                    {
+                      "id": "call_mRlCqGe4THU90M5rRWNYj3UU",
+                      "name": "get_sync_logs",
+                      "args": {
+                        "order_id": "100247"
+                      },
+                      "type": "tool_call"
+                    }
+                  ],
+                  "invalid_tool_calls": [],
+                  "additional_kwargs": {},
+                  "response_metadata": {}
+                }
+              }
+            ],
+            "toolCallId": "call_mRlCqGe4THU90M5rRWNYj3UU",
+            "type": "tool_call"
+          },
+          "observation": "[{\"ok\":false,\"status\":\"error\",\"error_code\":\"TOOL_UNAVAILABLE\",\"order_id\":\"100247\",\"reason\":\"Simulovaná služba synchronizačních logů je nedostupná. Stav synchronizace nebylo možné ověřit.\"}]"
+        },
+        {
+          "action": {
+            "tool": "create_ticket",
+            "toolInput": {
+              "tool": "create_ticket",
+              "description": "Objednávka 100247. Ověřeno: order_status = processing, payment_status = paid, fulfillment_status = not_received. Synchronizační logy nebylo možné načíst, služba vrátila TOOL_UNAVAILABLE (simulovaná služba synchronizačních logů je nedostupná), takže stav synchronizace ani příčinu nepředání skladu nelze ověřit. Požadavek: zjistit důvod neexpedování a při nedostupné službě vytvořit incident. Doporučený další postup: prověřit dostupnost služby synchronizačních logů a následně dohledat stav synchronizace objednávky 100247."
+            },
+            "log": "Calling create_ticket",
+            "messageLog": [
+              {
+                "lc_serializable": true,
+                "lc_kwargs": {
+                  "content": [],
+                  "tool_calls": [
+                    {
+                      "id": "call_nR8mW8murintdzLjukuA8sGZ",
+                      "name": "create_ticket",
+                      "args": {
+                        "tool": "create_ticket",
+                        "description": "Objednávka 100247. Ověřeno: order_status = processing, payment_status = paid, fulfillment_status = not_received. Synchronizační logy nebylo možné načíst, služba vrátila TOOL_UNAVAILABLE (simulovaná služba synchronizačních logů je nedostupná), takže stav synchronizace ani příčinu nepředání skladu nelze ověřit. Požadavek: zjistit důvod neexpedování a při nedostupné službě vytvořit incident. Doporučený další postup: prověřit dostupnost služby synchronizačních logů a následně dohledat stav synchronizace objednávky 100247."
+                      },
+                      "type": "tool_call"
+                    }
+                  ],
+                  "invalid_tool_calls": [],
+                  "additional_kwargs": {},
+                  "response_metadata": {}
+                },
+                "lc_namespace": [
+                  "langchain_core",
+                  "messages"
+                ],
+                "content": [],
+                "additional_kwargs": {},
+                "response_metadata": {},
+                "type": "ai",
+                "tool_calls": [
+                  {
+                    "id": "call_nR8mW8murintdzLjukuA8sGZ",
+                    "name": "create_ticket",
+                    "args": {
+                      "tool": "create_ticket",
+                      "description": "Objednávka 100247. Ověřeno: order_status = processing, payment_status = paid, fulfillment_status = not_received. Synchronizační logy nebylo možné načíst, služba vrátila TOOL_UNAVAILABLE (simulovaná služba synchronizačních logů je nedostupná), takže stav synchronizace ani příčinu nepředání skladu nelze ověřit. Požadavek: zjistit důvod neexpedování a při nedostupné službě vytvořit incident. Doporučený další postup: prověřit dostupnost služby synchronizačních logů a následně dohledat stav synchronizace objednávky 100247."
+                    },
+                    "type": "tool_call"
+                  }
+                ],
+                "invalid_tool_calls": []
+              }
+            ],
+            "toolCallId": "call_nR8mW8murintdzLjukuA8sGZ",
+            "type": "tool_call"
+          },
+          "observation": "[{\"ok\":true,\"created\":true,\"ticket_id\":\"INC-4\",\"ticket_status\":\"open\",\"description\":\"Objednávka 100247. Ověřeno: order_status = processing, payment_status = paid, fulfillment_status = not_received. Synchronizační logy nebylo možné načíst, služba vrátila TOOL_UNAVAILABLE (simulovaná služba synchronizačních logů je nedostupná), takže stav synchronizace ani příčinu nepředání skladu nelze ověřit. Požadavek: zjistit důvod neexpedování a při nedostupné službě vytvořit incident. Doporučený další postup: prověřit dostupnost služby synchronizačních logů a následně dohledat stav synchronizace objednávky 100247.\",\"request_id\":\"151\"}]"
+        }
+      ]
+    }
+  ]

@@ -1,0 +1,215 @@
+[
+  {
+    "output": "1. **Shrnutí výsledku**  \nV simulaci v mock systému byla objednávka **100246** dohledána, ale **nebyla expedována**, protože zatím **čeká na zaplacení**.\n\n2. **Ověřená zjištění a nejistoty**  \n- `order_status = new`  \n- `payment_status = pending`  \n- `fulfillment_status = on_hold`  \n- `sync_status = not_started`  \n- V logu je uvedeno: **„Synchronizace nebyla spuštěna: objednávka čeká na zaplacení.“**  \n- Nejistota: z dostupných dat nelze potvrdit žádnou technickou chybu; dostupné informace ukazují na čekání na úhradu.\n\n3. **Skutečně provedené kroky**  \n- Ověření objednávky `100246`  \n- Ověření stavu platby  \n- Ověření stavu fulfillmentu  \n- Ověření synchronizačních logů\n\n4. **Výsledek akcí**  \n- Diagnostika: **provedena**  \n- Změny v systému: **neprovedeny**\n\n5. **Doporučený další postup**  \nNejprve zkontrolovat a případně dokončit platbu objednávky. Po uhrazení by se měla znovu posoudit synchronizace a předání do skladu.",
+    "intermediateSteps": [
+      {
+        "action": {
+          "tool": "get_order",
+          "toolInput": {
+            "order_id": "100246"
+          },
+          "log": "Calling get_order",
+          "messageLog": [
+            {
+              "lc_serializable": true,
+              "lc_kwargs": {
+                "content": [],
+                "tool_calls": [
+                  {
+                    "id": "call_SWcpSKZ52rmGhVp5jx4ofxFr",
+                    "name": "get_order",
+                    "args": {
+                      "order_id": "100246"
+                    },
+                    "type": "tool_call"
+                  }
+                ],
+                "invalid_tool_calls": [],
+                "additional_kwargs": {},
+                "response_metadata": {}
+              },
+              "lc_namespace": [
+                "langchain_core",
+                "messages"
+              ],
+              "content": [],
+              "additional_kwargs": {},
+              "response_metadata": {},
+              "type": "ai",
+              "tool_calls": [
+                {
+                  "id": "call_SWcpSKZ52rmGhVp5jx4ofxFr",
+                  "name": "get_order",
+                  "args": {
+                    "order_id": "100246"
+                  },
+                  "type": "tool_call"
+                }
+              ],
+              "invalid_tool_calls": []
+            }
+          ],
+          "toolCallId": "call_SWcpSKZ52rmGhVp5jx4ofxFr",
+          "type": "tool_call"
+        },
+        "observation": "[{\"order_id\":\"100246\",\"order_status\":\"new\"}]"
+      },
+      {
+        "action": {
+          "tool": "get_payment",
+          "toolInput": {
+            "order_id": "100246"
+          },
+          "log": "Calling get_payment",
+          "messageLog": [
+            {
+              "lc_serializable": true,
+              "lc_kwargs": {
+                "content": [],
+                "tool_calls": [
+                  {
+                    "id": "call_MnGiV8vWdHpkN7aIOAAby1gE",
+                    "name": "get_payment",
+                    "args": {
+                      "order_id": "100246"
+                    },
+                    "type": "tool_call"
+                  }
+                ],
+                "invalid_tool_calls": [],
+                "additional_kwargs": {},
+                "response_metadata": {}
+              },
+              "lc_namespace": [
+                "langchain_core",
+                "messages"
+              ],
+              "content": [],
+              "additional_kwargs": {},
+              "response_metadata": {},
+              "type": "ai",
+              "tool_calls": [
+                {
+                  "id": "call_MnGiV8vWdHpkN7aIOAAby1gE",
+                  "name": "get_payment",
+                  "args": {
+                    "order_id": "100246"
+                  },
+                  "type": "tool_call"
+                }
+              ],
+              "invalid_tool_calls": []
+            }
+          ],
+          "toolCallId": "call_MnGiV8vWdHpkN7aIOAAby1gE",
+          "type": "tool_call"
+        },
+        "observation": "[{\"order_id\":\"100246\",\"payment_status\":\"pending\"}]"
+      },
+      {
+        "action": {
+          "tool": "get_fulfillment",
+          "toolInput": {
+            "order_id": "100246"
+          },
+          "log": "Calling get_fulfillment",
+          "messageLog": [
+            {
+              "lc_serializable": true,
+              "lc_kwargs": {
+                "content": [],
+                "tool_calls": [
+                  {
+                    "id": "call_523VsxYdFQd2Yz7bNrU8oJtb",
+                    "name": "get_fulfillment",
+                    "args": {
+                      "order_id": "100246"
+                    },
+                    "type": "tool_call"
+                  }
+                ],
+                "invalid_tool_calls": [],
+                "additional_kwargs": {},
+                "response_metadata": {}
+              },
+              "lc_namespace": [
+                "langchain_core",
+                "messages"
+              ],
+              "content": [],
+              "additional_kwargs": {},
+              "response_metadata": {},
+              "type": "ai",
+              "tool_calls": [
+                {
+                  "id": "call_523VsxYdFQd2Yz7bNrU8oJtb",
+                  "name": "get_fulfillment",
+                  "args": {
+                    "order_id": "100246"
+                  },
+                  "type": "tool_call"
+                }
+              ],
+              "invalid_tool_calls": []
+            }
+          ],
+          "toolCallId": "call_523VsxYdFQd2Yz7bNrU8oJtb",
+          "type": "tool_call"
+        },
+        "observation": "[{\"order_id\":\"100246\",\"fulfillment_status\":\"on_hold\"}]"
+      },
+      {
+        "action": {
+          "tool": "get_sync_logs",
+          "toolInput": {
+            "order_id": "100246"
+          },
+          "log": "Calling get_sync_logs",
+          "messageLog": [
+            {
+              "lc_serializable": true,
+              "lc_kwargs": {
+                "content": [],
+                "tool_calls": [
+                  {
+                    "id": "call_NaLwWEsT990TDQfjeN22SUMI",
+                    "name": "get_sync_logs",
+                    "args": {
+                      "order_id": "100246"
+                    },
+                    "type": "tool_call"
+                  }
+                ],
+                "invalid_tool_calls": [],
+                "additional_kwargs": {},
+                "response_metadata": {}
+              },
+              "lc_namespace": [
+                "langchain_core",
+                "messages"
+              ],
+              "content": [],
+              "additional_kwargs": {},
+              "response_metadata": {},
+              "type": "ai",
+              "tool_calls": [
+                {
+                  "id": "call_NaLwWEsT990TDQfjeN22SUMI",
+                  "name": "get_sync_logs",
+                  "args": {
+                    "order_id": "100246"
+                  },
+                  "type": "tool_call"
+                }
+              ],
+              "invalid_tool_calls": []
+            }
+          ],
+          "toolCallId": "call_NaLwWEsT990TDQfjeN22SUMI",
+          "type": "tool_call"
+        },
+        "observation": "[{\"order_id\":\"100246\",\"sync_status\":\"not_started\",\"sync_logs\":\"Synchronizace nebyla spuštěna: objednávka čeká na zaplacení.\"}]"
+      }
+    ]
+  }
+]
